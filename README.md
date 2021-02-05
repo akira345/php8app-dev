@@ -13,7 +13,9 @@ This container develops PHP 8 web application in the Japanese locale and time.
     Defailt path is /var/www/web/html
 
   - MEMCACHED_HOST
+
     Set Memcached server name.
+
     Defaiult name is memcached_srv.
 
 - MountPoints
