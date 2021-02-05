@@ -7,7 +7,7 @@ This container develops PHP 8 web application in the Japanese locale and time.
 - Environments
 
   - DOCUMENT_ROOT  
-     Sets the path of the document root in the container.(ex: /var/www/web/public_html)  
+    Sets the path of the document root in the container.(ex: /var/www/web/public_html)
     Defailt path is /var/www/web/html
 
   - MEMCACHED_HOST
