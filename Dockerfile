@@ -101,13 +101,12 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   i386) ARCH='x86';; \
   *) echo "unsupported architecture"; exit 1 ;; \
   esac \
+  # gpg keys listed at https://github.com/nodejs/node#release-keys
   && set -ex \
-  # libatomic1 for arm
-  && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr xz-utils libatomic1 --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/* \
   && for key in \
   4ED778F539E3634C779C87C6D7062848A1AB005C \
   94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
+  1C050899334244A8AF75E53792EF661D867B9DFA \
   71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
   8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
   C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
@@ -134,9 +133,6 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
 
 # install yarn
 RUN set -ex \
-  && savedAptMark="$(apt-mark showmanual)" \
-  && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/* \
   && for key in \
   6A010C5166006599AA17F08146C2130DFD2497F5 \
   ; do \
