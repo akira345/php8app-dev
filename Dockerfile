@@ -27,7 +27,7 @@ COPY .bashrc /root/
 # install postgresql13 client
 RUN apt-get update && apt-get install --no-install-recommends -y wget gnupg gnupg2 gnupg1 \
   && wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | apt-key add - \
-  && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' \
+  && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main" >> /etc/apt/sources.list.d/pgdg.list' \
   && apt-get update \
   && apt-get install --no-install-recommends -y postgresql-client-13
 
