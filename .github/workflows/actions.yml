@@ -12,10 +12,12 @@ name: Build and Publish Docker
 on:
   push:
     branches:
-      - master
-      - main
-      - 8.0
-      - 8.0-with_python3.10
+      - "master"
+      - "main"
+      - "8.0"
+      - "8.0-with_python3.10"
+      - "8.1"
+      - "8.1-with_python3.10"
 
   schedule:
     - cron: "0 0 1 * *"
