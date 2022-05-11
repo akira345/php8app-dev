@@ -87,7 +87,9 @@ USER www-data
 # install laravel installer
 RUN composer global require --optimize-autoloader \
   "laravel/installer"
+
 USER root
+ENV PATH $PATH:/var/www/.config/composer
 WORKDIR /var/www/web
 VOLUME /var/www/web
 
