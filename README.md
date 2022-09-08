@@ -31,7 +31,7 @@ This container develops PHP 8 web application in the Japanese locale and time.
 
   - Includes Larabel installer and composer. If you use, `docker exec -it ...`
   - Installed MySQL/MariaDB and PostgreSQL13 Clients.
-  - Installed nodeJS 16.15.1 and yarn 1.22.19.
+  - Installed nodeJS 16.17.0 and yarn 1.22.19.
   - Enable PHP opcache.
   - With self certificate by port 443. (TLSv1.3 Only!!)
 
