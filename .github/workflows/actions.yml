@@ -18,6 +18,9 @@ on:
       - "8.0-with_python3.10"
       - "8.1"
       - "8.1-with_python3.10"
+      - "8.2"
+      - "8.2-with_python3.11"
+      - "8.2-with_python3.12"
 
   schedule:
     - cron: "0 0 1 * *"
