@@ -16,18 +16,16 @@ ENV MEMCACHED_HOST memcached_srv
 
 # Build Environment
 ENV ADMINER_VERSION 4.8.1
-ENV NODE_VERSION 18.16.0
+ENV NODE_VERSION 18.16.1
 ENV YARN_VERSION 1.22.19
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 23.0.1
-# https://github.com/docker-library/python/issues/365
-ENV PYTHON_SETUPTOOLS_VERSION 65.5.1
+ENV PYTHON_PIP_VERSION 23.1.2
 # https://github.com/pypa/get-pip
 ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/0d8570dc44796f4369b652222cf176b3db6ac70e/public/get-pip.py
 ENV PYTHON_GET_PIP_SHA256 96461deced5c2a487ddc65207ec5a9cffeca0d34e7af7ea1afc470ff0d746207
 
 ENV GPG_KEY 7169605F62C751356D054A26A821E680E5FA6305
-ENV PYTHON_VERSION 3.12.0a7
+ENV PYTHON_VERSION 3.12.0b3
 
 # copy from custom bashrc
 COPY .bashrc /root/
@@ -153,7 +151,7 @@ RUN set -eux; \
 	apt-mark auto '.*' > /dev/null; \
 	apt-mark manual $savedAptMark; \
 	find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' ';' \
-		| awk '/=>/ { print $(NF-1) }' \
+		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); print so }' \
 		| sort -u \
 		| xargs -r dpkg-query --search \
 		| cut -d: -f1 \
@@ -195,7 +193,6 @@ RUN set -eux; \
 		--no-cache-dir \
 		--no-compile \
 		"pip==$PYTHON_PIP_VERSION" \
-		"setuptools==$PYTHON_SETUPTOOLS_VERSION" \
 	; \
 	rm -f get-pip.py; \
 	\
