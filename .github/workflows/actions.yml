@@ -58,7 +58,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and push(latest)
-        if: contains(github.ref, 'main') || contains(github.ref, 'master')
+        if: contains(matrix.branch, 'main') || contains(matrix.branch, 'master')
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -67,7 +67,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_IMAGENAME }}:latest
 
       - name: Build and push(release-${{ matrix.branch }})
-        if: (!(contains(github.ref, 'main') || contains(github.ref, 'master')))
+        if: (!(contains(matrix.branch, 'main') || contains(matrix.branch, 'master')))
         uses: docker/build-push-action@v5
         with:
           context: .
