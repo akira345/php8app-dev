@@ -22,11 +22,11 @@ ENV PYTHON_PIP_VERSION 23.2.1
 # https://github.com/docker-library/python/issues/365
 ENV PYTHON_SETUPTOOLS_VERSION 65.5.1
 # https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/4cfa4081d27285bda1220a62a5ebf5b4bd749cdb/public/get-pip.py
-ENV PYTHON_GET_PIP_SHA256 9cc01665956d22b3bf057ae8287b035827bfd895da235bcea200ab3b811790b6
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/dbf0c85f76fb6e1ab42aa672ffca6f0a675d9ee4/public/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 dfe9fd5c28dc98b5ac17979a953ea550cec37ae1b47a5116007395bfacff2ab9
 
 ENV GPG_KEY A035C8C19219BA821ECEA86B64E628F8D684696D
-ENV PYTHON_VERSION 3.11.6
+ENV PYTHON_VERSION 3.11.7
 
 # copy from custom bashrc
 COPY .bashrc /root/
