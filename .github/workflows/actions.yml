@@ -29,6 +29,19 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
 
+    strategy:
+      max-parallel: 4
+      matrix:
+        branch:
+          - "master"
+          - "8.1"
+          - "8.1-with_python3.10"
+          - "8.2"
+          - "8.2-with_python3.11"
+          - "8.2-with_python3.12"
+          - "8.3"
+          - "8.3-with_python3.13"
+
     steps:
       - name: Set Branch Name
         shell: bash
@@ -38,6 +51,8 @@ jobs:
 
       - name: checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
