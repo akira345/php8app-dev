@@ -34,7 +34,7 @@ jobs:
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -47,7 +47,7 @@ jobs:
 
       - name: Build and push(latest)
         if: contains(github.ref, 'main') || contains(github.ref, 'master')
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -56,7 +56,7 @@ jobs:
 
       - name: Build and push(release-${{ env.BRANCH_NAME }})
         if: (!(contains(github.ref, 'main') || contains(github.ref, 'master')))
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
