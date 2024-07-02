@@ -47,7 +47,7 @@ jobs:
 
       - name: Build and push(latest)
         if: contains(github.ref, 'main') || contains(github.ref, 'master')
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -56,7 +56,7 @@ jobs:
 
       - name: Build and push(release-${{ env.BRANCH_NAME }})
         if: (!(contains(github.ref, 'main') || contains(github.ref, 'master')))
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
