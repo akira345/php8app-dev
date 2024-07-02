@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           ref: ${{ matrix.branch }}
 
@@ -47,7 +47,7 @@ jobs:
 
       - name: Build and push(latest)
         if: contains(matrix.branch, 'main') || contains(matrix.branch, 'master')
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -56,7 +56,7 @@ jobs:
 
       - name: Build and push(release-${{ matrix.branch }})
         if: (!(contains(matrix.branch, 'main') || contains(matrix.branch, 'master')))
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
