@@ -1,4 +1,4 @@
-FROM php:8.1-apache-bookworm
+FROM php:8.2-apache-bookworm
 
 # Setting locale
 RUN apt-get update \
@@ -24,12 +24,12 @@ ENV PYTHON_SHA256 07a4356e912900e61a15cb0949a06c4a05012e213ecd6b4e84d0f67aabbee3
 # copy from custom bashrc
 COPY .bashrc /root/
 
-# install postgresql14 client
+# install postgresql15 client
 RUN apt-get update && apt-get install --no-install-recommends -y wget gnupg gnupg2 gnupg1\
   && curl -LfsS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
   && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
   && apt-get update \
-  && apt-get install --no-install-recommends -y postgresql-client-14
+  && apt-get install --no-install-recommends -y postgresql-client-15
 
 # install php middleware
 RUN apt-get update && apt-get install --no-install-recommends -y \
