@@ -23,12 +23,12 @@ ENV PYTHON_SHA256 2ff9e10147342b3efd69f5cd9cc06ec46250f2a046587599d18e2cac69c059
 # copy from custom bashrc
 COPY .bashrc /root/
 
-# install postgresql16 client
+# install postgresql17 client
 RUN apt-get update && apt-get install --no-install-recommends -y wget gnupg gnupg2 gnupg1\
   && curl -LfsS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
   && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
   && apt-get update \
-  && apt-get install --no-install-recommends -y postgresql-client-16
+  && apt-get install --no-install-recommends -y postgresql-client-17
 
 # install php middleware
 RUN apt-get update && apt-get install --no-install-recommends -y \
