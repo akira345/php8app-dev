@@ -21,6 +21,8 @@ on:
       - "8.2-with_python3.12"
       - "8.3"
       - "8.3-with_python3.13"
+      - "8.4"
+      - "8.4-with_python3.14"
 
 jobs:
   build_and_push:
