@@ -24,7 +24,7 @@ This container develops PHP 8 web application in the Japanese locale and time.
 
 - Preinstalled applications.
 
-  - Adminer 4.8.1 into /adminer.
+  - Adminer 5.3.0 into /adminer.
   - memcachephp into /memcached
 
     (ID:memcache PW:password)

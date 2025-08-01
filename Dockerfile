@@ -15,7 +15,7 @@ ENV DOCUMENT_ROOT /var/www/web/html
 ENV MEMCACHED_HOST memcached_srv
 
 # Build Environment
-ENV ADMINER_VERSION 4.8.1
+ENV ADMINER_VERSION 5.3.0
 
 
 
