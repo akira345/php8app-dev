@@ -15,10 +15,10 @@ ENV DOCUMENT_ROOT /var/www/web/html
 ENV MEMCACHED_HOST memcached_srv
 
 # Build Environment
-ENV ADMINER_VERSION 4.8.1
+ENV ADMINER_VERSION 5.3.0
 
-ENV PYTHON_VERSION 3.14.0a2
-ENV PYTHON_SHA256 2ff9e10147342b3efd69f5cd9cc06ec46250f2a046587599d18e2cac69c05920
+ENV PYTHON_VERSION 3.14.0b2
+ENV PYTHON_SHA256 7ac9e84844bbc0a5a8f1f79a37a68b3b8caf2a58b4aa5999c49227cb36e70ea6
 
 # copy from custom bashrc
 COPY .bashrc /root/
@@ -99,13 +99,31 @@ RUN set -eux; \
 		--enable-optimizations \
 		--enable-option-checking=fatal \
 		--enable-shared \
-		--with-lto \
+		$(test "$gnuArch" != 'riscv64-linux-musl' && echo '--with-lto') \
 		--with-ensurepip \
 	; \
 	nproc="$(nproc)"; \
 	EXTRA_CFLAGS="$(dpkg-buildflags --get CFLAGS)"; \
 	LDFLAGS="$(dpkg-buildflags --get LDFLAGS)"; \
 	LDFLAGS="${LDFLAGS:--Wl},--strip-all"; \
+		arch="$(dpkg --print-architecture)"; arch="${arch##*-}"; \
+# https://docs.python.org/3.12/howto/perf_profiling.html
+# https://github.com/docker-library/python/pull/1000#issuecomment-2597021615
+		case "$arch" in \
+			amd64|arm64) \
+				# only add "-mno-omit-leaf" on arches that support it
+				# https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/x86-Options.html#index-momit-leaf-frame-pointer-2
+				# https://gcc.gnu.org/onlinedocs/gcc-14.2.0/gcc/AArch64-Options.html#index-momit-leaf-frame-pointer
+				EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"; \
+				;; \
+			i386) \
+				# don't enable frame-pointers on 32bit x86 due to performance drop.
+				;; \
+			*) \
+				# other arches don't support "-mno-omit-leaf"
+				EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer"; \
+				;; \
+		esac; \
 	make -j "$nproc" \
 		"EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" \
 		"LDFLAGS=${LDFLAGS:-}" \
