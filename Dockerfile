@@ -15,11 +15,11 @@ ENV DOCUMENT_ROOT /var/www/web/html
 ENV MEMCACHED_HOST memcached_srv
 
 # Build Environment
-ENV ADMINER_VERSION 4.8.1
+ENV ADMINER_VERSION 5.3.0
 
 ENV GPG_KEY A035C8C19219BA821ECEA86B64E628F8D684696D
-ENV PYTHON_VERSION 3.11.10
-ENV PYTHON_SHA256 07a4356e912900e61a15cb0949a06c4a05012e213ecd6b4e84d0f67aabbee372
+ENV PYTHON_VERSION 3.11.12
+ENV PYTHON_SHA256 849da87af4df137710c1796e276a955f7a85c9f971081067c8f565d15c352a09
 
 # copy from custom bashrc
 COPY .bashrc /root/
@@ -106,7 +106,7 @@ RUN set -eux; \
 		--enable-optimizations \
 		--enable-option-checking=fatal \
 		--enable-shared \
-		--with-lto \
+		$(test "$gnuArch" != 'riscv64-linux-musl' && echo '--with-lto') \
 		--with-ensurepip \
 	; \
 	nproc="$(nproc)"; \
@@ -160,7 +160,8 @@ RUN set -eux; \
 		--no-cache-dir \
 		--no-compile \
 		'setuptools==65.5.1' \
-		wheel \
+		# https://github.com/docker-library/python/issues/1023
+		'wheel<0.46' \
 	; \
 	pip3 --version
 
