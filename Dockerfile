@@ -1,4 +1,4 @@
-FROM php:8.4-apache-bookworm
+FROM php:8.5-apache-bookworm
 
 # Setting locale
 RUN apt-get update \
