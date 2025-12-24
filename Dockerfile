@@ -1,4 +1,4 @@
-FROM php:8.1-apache-bookworm
+FROM php:8.1-apache-trixie
 
 # Setting locale
 RUN apt-get update \
@@ -6,20 +6,20 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && echo "ja_JP.UTF-8 UTF-8" > /etc/locale.gen \
   && locale-gen ja_JP.UTF-8
-ENV LC_ALL ja_JP.UTF-8
-ENV TZ "Asia/Tokyo"
-ENV DEBIAN_FRONTEND noninteractive
+ENV LC_ALL=ja_JP.UTF-8
+ENV TZ="Asia/Tokyo"
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Setting Envionment
-ENV DOCUMENT_ROOT /var/www/web/html
-ENV MEMCACHED_HOST memcached_srv
+ENV DOCUMENT_ROOT=/var/www/web/html
+ENV MEMCACHED_HOST=memcached_srv
 
 # Build Environment
-ENV ADMINER_VERSION 5.3.0
+ENV ADMINER_VERSION=5.4.1
 
 ENV GPG_KEY A035C8C19219BA821ECEA86B64E628F8D684696D
-ENV PYTHON_VERSION 3.10.18
-ENV PYTHON_SHA256 ae665bc678abd9ab6a6e1573d2481625a53719bc517e9a634ed2b9fefae3817f
+ENV PYTHON_VERSION 3.10.19
+ENV PYTHON_SHA256 c8f4a596572201d81dd7df91f70e177e19a70f1d489968b54b5fbbf29a97c076
 
 # copy from custom bashrc
 COPY .bashrc /root/
@@ -27,7 +27,7 @@ COPY .bashrc /root/
 # install postgresql14 client
 RUN apt-get update && apt-get install --no-install-recommends -y wget gnupg gnupg2 gnupg1\
   && curl -LfsS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
-  && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
+  && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ trixie-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
   && apt-get update \
   && apt-get install --no-install-recommends -y postgresql-client-14
 
@@ -49,7 +49,7 @@ RUN pecl channel-update pecl.php.net \
 # copy from custom php.ini file
 COPY php.ini /usr/local/etc/php/
 
-# Install Python3.10 and more...(based on debian:bookworm-slim)
+# Install Python3.10 and more...(based on debian:slim-trixie)
 RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
@@ -57,7 +57,7 @@ RUN set -eux; \
 		netbase \
 		tzdata \
 	; \
-	rm -rf /var/lib/apt/lists/*
+	apt-get dist-clean
 
 RUN set -eux; \
 	\
@@ -106,7 +106,7 @@ RUN set -eux; \
 		--enable-optimizations \
 		--enable-option-checking=fatal \
 		--enable-shared \
-		$(test "$gnuArch" != 'riscv64-linux-musl' && echo '--with-lto') \
+		$(test "${gnuArch%%-*}" != 'riscv64' && echo '--with-lto') \
 		--with-ensurepip \
 	; \
 	nproc="$(nproc)"; \
@@ -144,13 +144,14 @@ RUN set -eux; \
 	find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' ';' \
 		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
 		| sort -u \
-		| xargs -r dpkg-query --search \
-		| cut -d: -f1 \
+		| xargs -rt dpkg-query --search \
+# https://manpages.debian.org/bookworm/dpkg/dpkg-query.1.en.html#S (we ignore diversions and it'll be really unusual for more than one package to provide any given .so file)
+		| awk 'sub(":$", "", $1) { print $1 }' \
 		| sort -u \
 		| xargs -r apt-mark manual \
 	; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	rm -rf /var/lib/apt/lists/*; \
+	apt-get dist-clean; \
 	\
 	export PYTHONDONTWRITEBYTECODE=1; \
 	python3 --version; \
@@ -159,7 +160,7 @@ RUN set -eux; \
 		--disable-pip-version-check \
 		--no-cache-dir \
 		--no-compile \
-		'setuptools==65.5.1' \
+		'setuptools==79.0.1' \
 		# https://github.com/docker-library/python/issues/1023
 		'wheel<0.46' \
 	; \
@@ -214,7 +215,7 @@ RUN composer global require --optimize-autoloader \
   "laravel/installer"
 
 USER root
-ENV PATH $PATH:/var/www/.config/composer/vendor/bin/
+ENV PATH=$PATH:/var/www/.config/composer/vendor/bin/
 WORKDIR /var/www/web
 VOLUME /var/www/web
 
