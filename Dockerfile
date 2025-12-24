@@ -1,4 +1,4 @@
-FROM php:8.3-apache-bookworm
+FROM php:8.3-apache-trixie
 
 # Setting locale
 RUN apt-get update \
@@ -6,16 +6,16 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && echo "ja_JP.UTF-8 UTF-8" > /etc/locale.gen \
   && locale-gen ja_JP.UTF-8
-ENV LC_ALL ja_JP.UTF-8
-ENV TZ "Asia/Tokyo"
-ENV DEBIAN_FRONTEND noninteractive
+ENV LC_ALL=ja_JP.UTF-8
+ENV TZ="Asia/Tokyo"
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Setting Envionment
-ENV DOCUMENT_ROOT /var/www/web/html
-ENV MEMCACHED_HOST memcached_srv
+ENV DOCUMENT_ROOT=/var/www/web/html
+ENV MEMCACHED_HOST=memcached_srv
 
 # Build Environment
-ENV ADMINER_VERSION 5.3.0
+ENV ADMINER_VERSION=5.4.1
 
 
 
@@ -25,7 +25,7 @@ COPY .bashrc /root/
 # install postgresql16 client
 RUN apt-get update && apt-get install --no-install-recommends -y wget gnupg gnupg2 gnupg1\
   && curl -LfsS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
-  && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
+  && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ trixie-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
   && apt-get update \
   && apt-get install --no-install-recommends -y postgresql-client-16
 
@@ -87,7 +87,7 @@ RUN composer global require --optimize-autoloader \
   "laravel/installer"
 
 USER root
-ENV PATH $PATH:/var/www/.config/composer/vendor/bin/
+ENV PATH=$PATH:/var/www/.config/composer/vendor/bin/
 WORKDIR /var/www/web
 VOLUME /var/www/web
 
