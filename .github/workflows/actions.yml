@@ -23,6 +23,8 @@ on:
       - "8.3-with_python3.13"
       - "8.4"
       - "8.4-with_python3.14"
+      - "8.5"
+      - "8.5-with_python3.15"
 
 jobs:
   build_and_push:
