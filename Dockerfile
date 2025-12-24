@@ -1,4 +1,4 @@
-FROM php:8.4-apache-bookworm
+FROM php:8.4-apache-trixie
 
 # Setting locale
 RUN apt-get update \
@@ -6,19 +6,19 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && echo "ja_JP.UTF-8 UTF-8" > /etc/locale.gen \
   && locale-gen ja_JP.UTF-8
-ENV LC_ALL ja_JP.UTF-8
-ENV TZ "Asia/Tokyo"
-ENV DEBIAN_FRONTEND noninteractive
+ENV LC_ALL=ja_JP.UTF-8
+ENV TZ="Asia/Tokyo"
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Setting Envionment
-ENV DOCUMENT_ROOT /var/www/web/html
-ENV MEMCACHED_HOST memcached_srv
+ENV DOCUMENT_ROOT=/var/www/web/html
+ENV MEMCACHED_HOST=memcached_srv
 
 # Build Environment
-ENV ADMINER_VERSION 5.3.0
+ENV ADMINER_VERSION=5.4.1
 
-ENV PYTHON_VERSION 3.14.0b2
-ENV PYTHON_SHA256 7ac9e84844bbc0a5a8f1f79a37a68b3b8caf2a58b4aa5999c49227cb36e70ea6
+ENV PYTHON_VERSION 3.14.2
+ENV PYTHON_SHA256 ce543ab854bc256b61b71e9b27f831ffd1bfd60a479d639f8be7f9757cf573e9
 
 # copy from custom bashrc
 COPY .bashrc /root/
@@ -26,7 +26,7 @@ COPY .bashrc /root/
 # install postgresql17 client
 RUN apt-get update && apt-get install --no-install-recommends -y wget gnupg gnupg2 gnupg1\
   && curl -LfsS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
-  && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
+  && sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ trixie-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list' \
   && apt-get update \
   && apt-get install --no-install-recommends -y postgresql-client-17
 
@@ -48,7 +48,7 @@ RUN pecl channel-update pecl.php.net \
 # copy from custom php.ini file
 COPY php.ini /usr/local/etc/php/
 
-# Install Python3.14 and more...(based on debian:bookworm-slim)
+# Install Python3.14 and more...(based on debian:slim-trixie)
 RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
@@ -56,7 +56,7 @@ RUN set -eux; \
 		netbase \
 		tzdata \
 	; \
-	rm -rf /var/lib/apt/lists/*
+	apt-get dist-clean
 
 RUN set -eux; \
 	\
@@ -77,6 +77,7 @@ RUN set -eux; \
 		libreadline-dev \
 		libsqlite3-dev \
 		libssl-dev \
+		libzstd-dev \
 		make \
 		tk-dev \
 		uuid-dev \
@@ -99,7 +100,7 @@ RUN set -eux; \
 		--enable-optimizations \
 		--enable-option-checking=fatal \
 		--enable-shared \
-		$(test "$gnuArch" != 'riscv64-linux-musl' && echo '--with-lto') \
+		$(test "${gnuArch%%-*}" != 'riscv64' && echo '--with-lto') \
 		--with-ensurepip \
 	; \
 	nproc="$(nproc)"; \
@@ -155,13 +156,14 @@ RUN set -eux; \
 	find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec ldd '{}' ';' \
 		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
 		| sort -u \
-		| xargs -r dpkg-query --search \
-		| cut -d: -f1 \
+		| xargs -rt dpkg-query --search \
+# https://manpages.debian.org/bookworm/dpkg/dpkg-query.1.en.html#S (we ignore diversions and it'll be really unusual for more than one package to provide any given .so file)
+		| awk 'sub(":$", "", $1) { print $1 }' \
 		| sort -u \
 		| xargs -r apt-mark manual \
 	; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	rm -rf /var/lib/apt/lists/*; \
+	apt-get dist-clean; \
 	\
 	export PYTHONDONTWRITEBYTECODE=1; \
 	python3 --version; \
@@ -216,7 +218,7 @@ RUN composer global require --optimize-autoloader \
   "laravel/installer"
 
 USER root
-ENV PATH $PATH:/var/www/.config/composer/vendor/bin/
+ENV PATH=$PATH:/var/www/.config/composer/vendor/bin/
 WORKDIR /var/www/web
 VOLUME /var/www/web
 
