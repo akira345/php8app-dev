@@ -6,14 +6,14 @@ This container develops PHP 8 web application in the Japanese locale and time.
 
 ## Tags
 
-* [php8.1](https://github.com/akira345/php8app-dev/tree/master/variants/php8.1/Dockerfile) (PostgreSQL13 Client Installed.)
-* [php8.2](https://github.com/akira345/php8app-dev/tree/master/variants/php8.2/Dockerfile) (PostgreSQL14 Client Installed.)
-* [php8.3](https://github.com/akira345/php8app-dev/tree/master/variants/php8.3/Dockerfile) (PostgreSQL15 Client Installed.)
-* [php8.4](https://github.com/akira345/php8app-dev/tree/master/variants/php8.4/Dockerfile) (PostgreSQL16 Client Installed.)
-* [php8.5](https://github.com/akira345/php8app-dev/tree/master/variants/php8.5/Dockerfile) (PostgreSQL17 Client Installed.)
+* [php8.1](https://github.com/akira345/php8app-dev/tree/master/variants/php8.1/Dockerfile) (PostgreSQL14 Client Installed.)
+* [php8.2](https://github.com/akira345/php8app-dev/tree/master/variants/php8.2/Dockerfile) (PostgreSQL15 Client Installed.)
+* [php8.3](https://github.com/akira345/php8app-dev/tree/master/variants/php8.3/Dockerfile) (PostgreSQL16 Client Installed.)
+* [php8.4](https://github.com/akira345/php8app-dev/tree/master/variants/php8.4/Dockerfile) (PostgreSQL17 Client Installed.)
+* [php8.5](https://github.com/akira345/php8app-dev/tree/master/variants/php8.5/Dockerfile) (PostgreSQL18 Client Installed.)
 * [latest](https://github.com/akira345/php8app-dev/tree/master/variants/latest/Dockerfile) (PostgreSQL18 Client Installed.)
-* [php8.1-python3.10](https://github.com/akira345/php8app-dev/tree/master/variants/php8.1-python3.10/Dockerfile) (PostgreSQL13 Client Installed.)
-* [php8.2-python3.11](https://github.com/akira345/php8app-dev/tree/master/variants/php8.2-python3.11/Dockerfile) (PostgreSQL14 Client Installed.)
+* [php8.1-python3.10](https://github.com/akira345/php8app-dev/tree/master/variants/php8.1-python3.10/Dockerfile) (PostgreSQL14 Client Installed.)
+* [php8.2-python3.11](https://github.com/akira345/php8app-dev/tree/master/variants/php8.2-python3.11/Dockerfile) (PostgreSQL15 Client Installed.)
 * [php8.2-python3.12](https://github.com/akira345/php8app-dev/tree/master/variants/php8.2-python3.12/Dockerfile) (PostgreSQL15 Client Installed.)
 * [php8.3-python3.13](https://github.com/akira345/php8app-dev/tree/master/variants/php8.3-python3.13/Dockerfile) (PostgreSQL16 Client Installed.)
 * [php8.4-python3.14](https://github.com/akira345/php8app-dev/tree/master/variants/php8.4-python3.14/Dockerfile) (PostgreSQL17 Client Installed.)
