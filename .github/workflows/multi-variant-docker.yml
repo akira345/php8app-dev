@@ -41,38 +41,38 @@ jobs:
           echo "=== Debug: Finding directories ==="
           
           # より確実なディレクトリ検索方法
-          DIRS=\$(ls -1 | grep -E '^(php|latest)' | sort)
-          echo "Found directories: \$DIRS"
+          DIRS=$(ls -1 | grep -E '^(php|latest)' | sort)
+          echo "Found directories: $DIRS"
           
           # マトリックス配列を構築
           VARIANTS=""
-          for dir in \$DIRS; do
-            if [ -d "\$dir" ]; then
-              echo "Processing directory: \$dir"
-              if [ -z "\$VARIANTS" ]; then
-                VARIANTS="\"\$dir\""
+          for dir in $DIRS; do
+            if [ -d "$dir" ]; then
+              echo "Processing directory: $dir"
+              if [ -z "$VARIANTS" ]; then
+                VARIANTS=\"$dir\"
               else
-                VARIANTS="\$VARIANTS,\"\$dir\""
+                VARIANTS=$VARIANTS,\"$dir\"
               fi
             fi
           done
           
-          if [ -z "\$VARIANTS" ]; then
+          if [ -z "$VARIANTS" ]; then
             echo "Error: No PHP variants found in variants directory."
             exit 1
           fi
           
-          MATRIX_JSON="[\$VARIANTS]"
-          echo "Generated matrix JSON: \$MATRIX_JSON"
+          MATRIX_JSON=[$VARIANTS]
+          echo "Generated matrix JSON: $MATRIX_JSON"
           
           # JSON 妥当性チェック
-          echo "\$MATRIX_JSON" | jq . > /dev/null
-          if [ \$? -ne 0 ]; then
-            echo "Error: Generated invalid JSON: \$MATRIX_JSON"
+          echo "$MATRIX_JSON" | jq . > /dev/null
+          if [ $? -ne 0 ]; then
+            echo "Error: Generated invalid JSON: $MATRIX_JSON"
             exit 1
           fi
           
-          echo "matrix=\$MATRIX_JSON" >> \$GITHUB_OUTPUT
+          echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
           echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
 
   build-and-push:
