@@ -39,13 +39,16 @@ jobs:
           echo "=== Debug: Listing variants directory ==="
           ls -la
           echo "=== Debug: Finding directories ==="
-          find . -maxdepth 1 -type d \( -name "php*" -o -name "latest" \) | sort
-          echo "=== Debug: Processing variants ==="
           
-          # より安全な方法でマトリックスを構築
+          # より確実なディレクトリ検索方法
+          DIRS=\$(ls -1 | grep -E '^(php|latest)' | sort)
+          echo "Found directories: \$DIRS"
+          
+          # マトリックス配列を構築
           VARIANTS=""
-          for dir in \$(find . -maxdepth 1 -type d \( -name "php*" -o -name "latest" \) | sed 's|./||' | sort); do
-            if [ ! -z "\$dir" ] && [ "\$dir" != "." ]; then
+          for dir in \$DIRS; do
+            if [ -d "\$dir" ]; then
+              echo "Processing directory: \$dir"
               if [ -z "\$VARIANTS" ]; then
                 VARIANTS="\"\$dir\""
               else
@@ -60,7 +63,7 @@ jobs:
           fi
           
           MATRIX_JSON="[\$VARIANTS]"
-          echo "Found variants: \$MATRIX_JSON"
+          echo "Generated matrix JSON: \$MATRIX_JSON"
           
           # JSON 妥当性チェック
           echo "\$MATRIX_JSON" | jq . > /dev/null
