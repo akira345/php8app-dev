@@ -36,14 +36,40 @@ jobs:
             exit 1
           fi
           cd variants
-          VARIANTS=$(find . -maxdepth 1 -type d \( -name "php*" -o -name "latest" \) | sed 's|./||' | grep -v '^$' | sort)
-          if [ -z "$VARIANTS" ]; then
+          echo "=== Debug: Listing variants directory ==="
+          ls -la
+          echo "=== Debug: Finding directories ==="
+          find . -maxdepth 1 -type d \( -name "php*" -o -name "latest" \) | sort
+          echo "=== Debug: Processing variants ==="
+          
+          # より安全な方法でマトリックスを構築
+          VARIANTS=""
+          for dir in \$(find . -maxdepth 1 -type d \( -name "php*" -o -name "latest" \) | sed 's|./||' | sort); do
+            if [ ! -z "\$dir" ] && [ "\$dir" != "." ]; then
+              if [ -z "\$VARIANTS" ]; then
+                VARIANTS="\"\$dir\""
+              else
+                VARIANTS="\$VARIANTS,\"\$dir\""
+              fi
+            fi
+          done
+          
+          if [ -z "\$VARIANTS" ]; then
             echo "Error: No PHP variants found in variants directory."
             exit 1
           fi
-          echo "Found variants:"
-          echo "$VARIANTS"
-          MATRIX_JSON=$(echo "$VARIANTS" | grep -v '^$' | jq -R . | jq -s .)
+          
+          MATRIX_JSON="[\$VARIANTS]"
+          echo "Found variants: \$MATRIX_JSON"
+          
+          # JSON 妥当性チェック
+          echo "\$MATRIX_JSON" | jq . > /dev/null
+          if [ \$? -ne 0 ]; then
+            echo "Error: Generated invalid JSON: \$MATRIX_JSON"
+            exit 1
+          fi
+          
+          echo "matrix=\$MATRIX_JSON" >> \$GITHUB_OUTPUT
           echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
 
   build-and-push:
