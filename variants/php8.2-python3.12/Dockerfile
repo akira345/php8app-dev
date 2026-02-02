@@ -1,7 +1,7 @@
 # ==========================================
 # Python Stage: 公式Pythonイメージを使用
 # ==========================================
-FROM python:3.12-slim-trixie AS python-stage
+FROM python:3.14-slim-trixie AS python-stage
 
 # 必要なPython関係ファイルを固める（シンボリックリンクがコピーできない対策）
 RUN tar czf python.tar.gz /usr/local/bin/python* \  
