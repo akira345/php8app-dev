@@ -13,7 +13,7 @@ RUN tar czf python.tar.gz /usr/local/bin/python* \
 # ==========================================
 # Build Stage 2: PHP拡張ビルド環境
 # ==========================================
-FROM php:8.1-apache-trixie AS php-builder
+FROM php:8.5-apache-trixie AS php-builder
 
 # Setting locale
 RUN apt-get update \
@@ -62,7 +62,7 @@ RUN pecl channel-update pecl.php.net \
 # ==========================================
 # Runtime Stage: PHPのみ
 # ==========================================
-FROM php:8.1-apache-trixie
+FROM php:8.5-apache-trixie
 
 # 日本ロケール設定
 RUN apt-get update \
