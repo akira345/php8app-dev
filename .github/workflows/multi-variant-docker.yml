@@ -17,6 +17,8 @@ on:
     branches:
       - "master"
       - "main"
+  schedule:
+    - cron: "0 0 1 * *"  # 毎月1日午前0時（UTC）に実行
 
 jobs:
   setup-matrix:
