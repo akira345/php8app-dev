@@ -66,7 +66,7 @@ ENV DOCUMENT_ROOT=/var/www/web/html
 ENV MEMCACHED_HOST=memcached_srv
 COPY .bashrc /root/
 
-ENV ADMINER_VERSION=5.4.1
+ENV ADMINER_VERSION=5.4.2
 
 
 # PHP機能拡張に必要なものをインストール
